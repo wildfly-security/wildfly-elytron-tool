@@ -19,6 +19,7 @@ package org.wildfly.security.tool;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -218,6 +219,9 @@ class CredentialStoreCommand extends Command {
                 credentialSourceProtectionParameter,
                 getProvidersSupplier(otherProviders).get());
 
+        // Get the original permissions of the credential store...
+        Set<PosixFilePermission> originalLocationPermissions = Files.getPosixFilePermissions(Paths.get(location));
+
         // ELY-1294 compute password to validate salt parameter without --summary.
         if (csPassword != null && !csPassword.startsWith("MASK-") && salt != null && iterationCount > -1) {
             password = MaskCommand.computeMasked(csPassword, salt, iterationCount);
@@ -247,6 +251,9 @@ class CredentialStoreCommand extends Command {
                 System.out.println(ElytronToolMessages.msg.aliasStored(alias));
             }
             setStatus(ElytronTool.ElytronToolExitStatus_OK);
+
+            // ...and restore them
+            Files.setPosixFilePermissions(Paths.get(location), originalLocationPermissions);
         } else if (cmdLine.hasOption(REMOVE_ALIAS_PARAM)) {
             String alias = cmdLine.getOptionValue(REMOVE_ALIAS_PARAM);
             if (credentialStore.exists(alias, entryTypeToCredential(entryType))) {
