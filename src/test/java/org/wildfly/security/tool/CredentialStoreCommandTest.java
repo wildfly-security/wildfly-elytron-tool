@@ -28,6 +28,11 @@ import org.junit.Test;
 import org.wildfly.security.credential.store.CredentialStore;
 import org.wildfly.security.credential.store.CredentialStoreException;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
+
 /**
  * Test for "credential-store" command.
  * @author <a href="mailto:pskopek@redhat.com">Peter Skopek</a>
@@ -98,6 +103,28 @@ public class CredentialStoreCommandTest extends AbstractCommandTest {
 
         CredentialStore store = getCredentialStoreStorageFromExistsFile(storageLocation, storagePassword);
         checkAliasSecretValue(store, aliasName, aliasValue);
+    }
+
+    @Test
+    public void testKeepFilePermissions() throws Exception {
+        String storageLocation = getStoragePathForNewFile();
+        String storagePassword = "cspassword";
+        String aliasName = "testalias";
+        String aliasValue = "secret2";
+
+        String[] args = { "--location=" + storageLocation, "--create", "--add", aliasName, "--secret",
+                aliasValue, "--summary", "--password", storagePassword };
+        executeCommandAndCheckStatus(args);
+
+        // Get the original permissions of the credential store
+        Set<PosixFilePermission> locationPermissionsBeforeFlush = Files.getPosixFilePermissions(Paths.get(storageLocation));
+        CredentialStore store = getCredentialStoreStorageFromExistsFile(storageLocation, storagePassword);
+        checkAliasSecretValue(store, aliasName, aliasValue);
+
+        // Get the permissions after adding a new alias
+        Set<PosixFilePermission> locationPermissionsAfterFlush = Files.getPosixFilePermissions(Paths.get(storageLocation));
+
+        assertEquals(locationPermissionsBeforeFlush, locationPermissionsAfterFlush);
     }
 
     @Test
