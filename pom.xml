@@ -69,7 +69,6 @@
         <version.org.wildfly.checkstyle-config>1.0.6.Final</version.org.wildfly.checkstyle-config>
         <version.org.wildfly.client.config>1.0.1.Final</version.org.wildfly.client.config>
         <version.org.wildfly.common>1.5.1.Final</version.org.wildfly.common>
-        <version.org.apache.commons>3.5</version.org.apache.commons>
 
         <test.level>INFO</test.level>
         <!-- Checkstyle configuration -->
@@ -262,11 +261,6 @@
             <groupId>org.wildfly.common</groupId>
             <artifactId>wildfly-common</artifactId>
             <version>${version.org.wildfly.common}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${version.org.apache.commons}</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
