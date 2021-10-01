@@ -1,6 +1,8 @@
 WildFly Elytron Tool
 ====================
 
+WildFly Elytron's wildfly-elytron-tool repository is no longer in use to date, and it is reccomended to view wildfly-elytron/tool for relevant code for the Elytron Tool. 
+
 WildFly Elytron is a new WildFly sub-project which is completely replacing the combination of PicketBox and JAAS as the WildFly client and  server security mechanism.  This project is the command line tool to expose utilities when working with WildFly Elytron.
  
 An "elytron" (ĕl´·ĭ·trŏn, plural "elytra") is the hard, protective casing over a wing of certain flying insects (e.g. beetles).
